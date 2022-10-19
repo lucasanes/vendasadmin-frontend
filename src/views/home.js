@@ -1,6 +1,12 @@
 import React from "react"
+import LocalStorageService from "../app/service/localstorageService"
 
 class Home extends React.Component{
+
+    componentDidMount(){
+        const usuarioLogado = LocalStorageService.obterItem('_usuario_Logado')
+    }
+
     render(){
         return(
             <div className="jumbotron">
@@ -9,8 +15,8 @@ class Home extends React.Component{
                 <hr className="my-4"/>
                 <p>E essa é sua área administrativa, utilize um dos menus ou botões abaixo para navegar pelo sistema.</p>
                 <p className="lead">
-                <a className="btn btn-primary btn-lg" href="#/cadastro-usuarios" role="button"><i className="fa fa-users"></i>  Cadastrar Usuário</a>
-                <a className="btn btn-danger btn-lg" href="#/cadastro-usuarios" role="button"><i className="fa fa-users"></i>  Cadastrar Nota de Entrada</a>
+                <a className="btn btn-primary btn-lg" href="#/cadastro-usuario" role="button"><i className="fa fa-users"></i>  Cadastrar Empresa</a>
+                <a className="btn btn-danger btn-lg" href="#/cadastro-usuario" role="button"><i className="fa fa-users"></i>  Cadastrar Nota de Entrada</a>
                 </p>
             </div>
         )
