@@ -32,20 +32,7 @@ class ConsultaEmpresa extends React.Component{
                 <br/>
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="bs-component">
-                            <table className="table table-hover" data={empresas} tabIndex='item'>
-                                <theade>
-                                    <tr>
-                                        <th scope="col">Nome</th>
-                                    </tr>
-                                </theade>
-                                <tbody>
-                                    <tr>
-                                        <td>{item.nome}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        
                     </div>
                 </div>
             </Card>
