@@ -1,11 +1,6 @@
 import React from "react"
-import LocalStorageService from "../app/service/localstorageService"
 
 class Home extends React.Component{
-
-    componentDidMount(){
-        const usuarioLogado = LocalStorageService.obterItem('_usuario_Logado')
-    }
 
     render(){
         return(
