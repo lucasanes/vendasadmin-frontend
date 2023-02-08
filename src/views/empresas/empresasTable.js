@@ -4,9 +4,20 @@ export default props =>  {
 
     const rows = props.empresas.map( empresa => {   
         return (
-            <tr>
+            <tr key={empresa.id}>
                 <td>{empresa.nome}</td>
-                <td></td>
+                <td>
+                    <button type="button" 
+                            className="btn btn-success"
+                            onClick={e => props.editar(empresa.id)}>
+                        Editar
+                    </button>
+                    <button type="button" 
+                            className="btn btn-danger"
+                            onClick={e => props.excluir(empresa)}>
+                        Excluir
+                    </button>
+                </td>
             </tr>
         ) 
     } )

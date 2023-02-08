@@ -15,4 +15,12 @@ export default class EmpresaService extends ApiService {
         return this.get(params);
     }
 
+    salvar(empresa){
+        return this.post('/salvar', empresa);
+    }
+
+    excluir(id){
+        return this.delete(`/${id}`);
+    }
+
 }
