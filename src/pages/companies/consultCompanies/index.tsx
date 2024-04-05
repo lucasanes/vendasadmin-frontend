@@ -1,5 +1,11 @@
-import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@nextui-org/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "../../../components/card";
@@ -83,8 +89,8 @@ export function ConsultCompanies() {
 
   const confirmDialogFooter = (
     <div>
-      <Button label="Confirmar" icon="pi pi-check" onClick={excluir} />
-      <Button label="Cancelar" icon="pi pi-times" onClick={cancelarExcluir} />
+      <Button onClick={excluir}>Confirmar</Button>
+      <Button onClick={cancelarExcluir}>Cancelar</Button>
     </div>
   );
 
@@ -138,18 +144,26 @@ export function ConsultCompanies() {
         </div>
       </div>
 
-      <div>
-        <Dialog
-          header="Confirmar operação"
-          visible={showConfirmDialog}
-          style={{ width: "50vw" }}
-          footer={confirmDialogFooter}
-          modal={true}
-          onHide={() => setShowConfirmDialog(false)}
-        >
-          Confirma a exclusão da empresa?
-        </Dialog>
-      </div>
+      <Modal
+        isOpen={showConfirmDialog}
+        onOpenChange={() => setShowConfirmDialog(!showConfirmDialog)}
+      >
+        <ModalHeader>
+          <ModalContent>
+            <h1>Confirmar operação</h1>
+          </ModalContent>
+        </ModalHeader>
+
+        <ModalBody>
+          <ModalContent>
+            <span>Confirma a exclusão da empresa?</span>
+          </ModalContent>
+        </ModalBody>
+
+        <ModalFooter>
+          <ModalContent>{confirmDialogFooter}</ModalContent>
+        </ModalFooter>
+      </Modal>
     </Card>
   );
 }

@@ -11,11 +11,7 @@ export function Home() {
         para navegar pelo sistema.
       </p>
       <p className="lead">
-        <Link
-          className="btn btn-primary btn-lg"
-          to="/register-user"
-          role="button"
-        >
+        <Link className="btn btn-primary btn-lg" to="/register" role="button">
           <i className="fa fa-users"></i> Cadastrar Usuário
         </Link>
         <Link

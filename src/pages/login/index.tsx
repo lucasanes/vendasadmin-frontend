@@ -1,9 +1,11 @@
+import { Button } from "@nextui-org/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "../../components/card";
 import { FormGroup } from "../../components/form-group";
 import { mensagemErro } from "../../components/toastr";
 import { api } from "../../services/api";
+import * as S from "./styles";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -25,17 +27,17 @@ export function Login() {
   }
 
   function prepareCadastrar() {
-    navigate("/register-user");
+    navigate("/register");
   }
 
   return (
-    <div className="row">
+    <S.Container>
       <div className="col-md-6" style={{ position: "relative", left: "300px" }}>
         <div className="bs-docs-section">
           <Card title="Login">
             <div className="row">
               <div className="col-lg-12">
-                <div className="bs-component">
+                <div>
                   <fieldset>
                     <FormGroup label="Email: *" htmlFor="exampleInputEmail1">
                       <input
@@ -62,13 +64,7 @@ export function Login() {
                   </fieldset>
                 </div>
 
-                <button
-                  onClick={entrar}
-                  type="button"
-                  className="btn btn-success"
-                >
-                  Entrar
-                </button>
+                <Button onClick={entrar}>Entrar</Button>
                 <button
                   onClick={prepareCadastrar}
                   type="button"
@@ -81,6 +77,6 @@ export function Login() {
           </Card>
         </div>
       </div>
-    </div>
+    </S.Container>
   );
 }

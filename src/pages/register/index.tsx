@@ -6,7 +6,7 @@ import { FormGroup } from "../../components/form-group";
 import { mensagemErro, mensagemSucesso } from "../../components/toastr";
 import { api } from "../../services/api";
 
-export function User() {
+export function Register() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -56,7 +56,7 @@ export function User() {
         mensagemSucesso(
           "Usuário cadastrado com sucesso! Faça o login para acessar o sistema."
         );
-        navigate("/login");
+        navigate("/");
       })
       .catch((erro) => {
         mensagemErro(erro.response.data);
@@ -64,7 +64,7 @@ export function User() {
   }
 
   function cancelar() {
-    navigate("/login");
+    navigate("/");
   }
 
   return (
