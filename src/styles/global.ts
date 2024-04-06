@@ -36,6 +36,10 @@ export const GlobalStyles = globalCss({
     position: "fixed",
   },
 
+  ".pallet": {
+    color: "$pallet",
+  },
+
   button: {
     cursor: "pointer",
   },
@@ -45,10 +49,9 @@ export const GlobalStyles = globalCss({
     opacity: 0.5,
   },
 
-  "input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, textarea:-webkit-autofill, textarea:-webkit-autofill:hover, textarea:-webkit-autofill:focus, select:-webkit-autofill, select:-webkit-autofill:hover, select:-webkit-autofill:focus":
+  "input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill":
     {
-      "-webkit-box-shadow": `0 0 0 30px ${"$.colors.loContrast"} inset`,
-      "-webkit-text-fill-color": `${"$.colors.hiContrast"} !important`,
+      transition: "0s 50000s",
     },
 
   "input[type=number]::-webkit-inner-spin-button": {

@@ -1,9 +1,17 @@
-import { Button } from "@nextui-org/react";
+import {
+  Button,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
+  Input,
+} from "@nextui-org/react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Card } from "../../components/card";
-import { FormGroup } from "../../components/form-group";
-import { mensagemErro } from "../../components/toastr";
+import { MdOutlineEmail } from "react-icons/md";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import logo from "../../assets/img/bolsa.png";
+import PasswordInput from "../../components/passwordInput";
 import { api } from "../../services/api";
 import * as S from "./styles";
 
@@ -16,67 +24,57 @@ export function Login() {
   async function entrar() {
     api
       .post("/api/usuarios/autenticar", { email, senha })
-      .then((response) => {
-        localStorage.setItem("_usuario_logado", JSON.stringify(response.data));
+      .then(() => {
         navigate("/");
       })
       .catch((erro) => {
-        console.log(erro);
-        mensagemErro(erro.response.data);
+        toast.error(erro.response.data);
       });
-  }
-
-  function prepareCadastrar() {
-    navigate("/register");
   }
 
   return (
     <S.Container>
-      <div className="col-md-6" style={{ position: "relative", left: "300px" }}>
-        <div className="bs-docs-section">
-          <Card title="Login">
-            <div className="row">
-              <div className="col-lg-12">
-                <div>
-                  <fieldset>
-                    <FormGroup label="Email: *" htmlFor="exampleInputEmail1">
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="form-control"
-                        id="exampleInputEmail1"
-                        aria-describedby="emailHelp"
-                        placeholder="Digite o Email"
-                      />
-                    </FormGroup>
-                    <FormGroup label="Senha: *" htmlFor="exampleInputPassword1">
-                      <input
-                        type="password"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
-                        className="form-control"
-                        id="exampleInputPassword1"
-                        aria-describedby="Password"
-                        placeholder="Password"
-                      />
-                    </FormGroup>
-                  </fieldset>
-                </div>
-
-                <Button onClick={entrar}>Entrar</Button>
-                <button
-                  onClick={prepareCadastrar}
-                  type="button"
-                  className="btn btn-danger"
-                >
-                  Cadastrar
-                </button>
-              </div>
-            </div>
-          </Card>
-        </div>
+      <div className="header">
+        <img width={40} src={logo} />
+        <h1>Sigeve Web</h1>
       </div>
+      <S.CardComponent>
+        <CardHeader>
+          <h1 style={{ fontSize: "20px" }}>Login</h1>
+        </CardHeader>
+        <Divider />
+        <CardBody>
+          <form
+            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+            onSubmit={entrar}
+            autoComplete="off"
+          >
+            <Input
+              isRequired
+              labelPlacement="outside"
+              autoComplete="off"
+              type="email"
+              label="Email"
+              value={email}
+              onValueChange={setEmail}
+              startContent={<MdOutlineEmail className="pallet" size={20} />}
+              placeholder="eu@exemplo.com"
+            />
+            <PasswordInput
+              autoComplete="off"
+              value={senha}
+              onValueChange={setSenha}
+            />
+          </form>
+        </CardBody>
+        <Divider />
+        <CardFooter style={{ gap: "10px" }}>
+          <Button onClick={entrar}>Entrar</Button>
+          <Button as={Link} to="/register">
+            Cadastrar
+          </Button>
+        </CardFooter>
+      </S.CardComponent>
     </S.Container>
   );
 }

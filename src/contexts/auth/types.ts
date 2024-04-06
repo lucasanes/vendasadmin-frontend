@@ -1,29 +1,12 @@
 export type AuthContextProps = {
-  signIn: (
-    email: string,
-    senha: string,
-    setValidateError: React.Dispatch<
-      React.SetStateAction<{
-        error: string;
-        msg: string;
-      }>
-    >
-  ) => void;
+  signIn: (nome: string, email: string, token: string) => void;
 
   signOut: () => void;
 
   user:
     | {
-        username: string;
+        nome: string;
         email: string;
-      }
-    | null
-    | undefined;
-
-  restaurante:
-    | {
-        name: string;
-        img: string;
       }
     | null
     | undefined;
@@ -33,13 +16,8 @@ export type AuthContextProps = {
 
 export type DataProps = {
   user: {
-    username: string;
+    nome: string;
     email: string;
-  } | null;
-
-  restaurante: {
-    name: string;
-    img: string;
   } | null;
 
   token: string | null;
