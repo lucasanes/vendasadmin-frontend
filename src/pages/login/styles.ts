@@ -3,11 +3,12 @@ import { styled } from "../../../stitches.config";
 
 export const Container = styled("div", {
   width: "100vw",
-  height: "100vh",
+  height: "100%",
   display: "flex",
   flexDirection: "column",
-  justifyContent: "center",
+  justifyContent: "flex-start",
   alignItems: "center",
+  paddingTop: 50,
   gap: "30px",
 
   ".header": {

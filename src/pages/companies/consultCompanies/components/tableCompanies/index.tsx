@@ -1,3 +1,13 @@
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@nextui-org/react";
+
 interface Empresa {
   id: number;
   nome: string;
@@ -18,47 +28,45 @@ interface Empresa {
 }
 
 export function TableCompanies({
-  empresas,
-  editar,
-  excluir,
+  companies,
+  edit,
+  remove,
 }: {
-  empresas: Empresa[];
-  editar: (id: number) => void;
-  excluir: (empresa: Empresa) => void;
+  companies: Empresa[];
+  edit: (id: number) => void;
+  remove: (id: number) => void;
 }) {
-  const rows = empresas.map((empresa) => {
-    return (
-      <tr key={empresa.id}>
-        <td>{empresa.nome}</td>
-        <td>
-          <button
-            type="button"
-            className="btn btn-success"
-            onClick={() => editar(empresa.id)}
-          >
-            Editar
-          </button>
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={() => excluir(empresa)}
-          >
-            Excluir
-          </button>
-        </td>
-      </tr>
-    );
-  });
-
   return (
-    <table className="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Nome</th>
-          <th scope="col">Ações</th>
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
+    <Table>
+      <TableHeader>
+        <TableColumn width={"75%"}>Nome</TableColumn>
+        <TableColumn>Ações</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {companies.map((empresa) => (
+          <TableRow key={empresa.id}>
+            <TableCell style={{ textTransform: "capitalize" }}>
+              {empresa.nome}
+            </TableCell>
+            <TableCell style={{ display: "flex", gap: 20 }}>
+              <Button
+                color="success"
+                variant="flat"
+                onPress={() => edit(empresa.id)}
+              >
+                Editar
+              </Button>
+              <Button
+                color="danger"
+                variant="flat"
+                onPress={() => remove(empresa.id)}
+              >
+                Excluir
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

@@ -1,24 +1,24 @@
+export type User = {
+  id: number;
+  nome: string;
+  email: string;
+  senha: string;
+  dataCadastro: Date;
+  dataAtualizacao: Date;
+};
+
 export type AuthContextProps = {
-  signIn: (nome: string, email: string, token: string) => void;
+  signIn: (user: User, token: string) => void;
 
   signOut: () => void;
 
-  user:
-    | {
-        nome: string;
-        email: string;
-      }
-    | null
-    | undefined;
+  user: User | null | undefined;
 
   token: string | null | undefined;
 };
 
 export type DataProps = {
-  user: {
-    nome: string;
-    email: string;
-  } | null;
+  user: User | null;
 
   token: string | null;
 };

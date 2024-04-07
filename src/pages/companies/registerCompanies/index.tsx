@@ -1,61 +1,60 @@
+import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
 import { useState } from "react";
-
-import { Card } from "../../../components/card";
-import { FormGroup } from "../../../components/form-group";
-
-import { useNavigate } from "react-router-dom";
-import * as messages from "../../../components/toastr";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAuth } from "../../../contexts/auth";
 import { api } from "../../../services/api";
+import * as S from "./styles";
 
 export function RegisterCompanies() {
-  const [nome, setNome] = useState("");
+  const [name, setName] = useState("");
 
   const navigate = useNavigate();
 
-  function submit() {
-    const usuarioLogado = JSON.parse(localStorage.getItem("_usuario_logado")!);
+  const { user } = useAuth();
 
+  function submit() {
     api
-      .post("/api/empresas/salvar", { nome, usuario: usuarioLogado.id })
+      .post("/api/empresas/salvar", { nome: name, usuario: user?.id })
       .then(() => {
         navigate("/consult-companie");
-        messages.mensagemSucesso("Empresa cadastrada com sucesso!");
+        toast.success("Empresa cadastrada com sucesso!");
       })
       .catch((error) => {
-        messages.mensagemErro(error.response.data);
+        toast.error(error.response.data);
       });
   }
 
   return (
-    <Card title="Cadastrar Empresa">
-      <div className="row">
-        <div className="col-md-6">
-          <FormGroup id="inputNome" label="Nome: ">
-            <input
-              id="inputNome"
-              type="text"
-              className="form-control"
-              name="nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-            />
-          </FormGroup>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-md-6">
-          <button onClick={submit} type="button" className="btn btn-success">
-            Salvar
-          </button>
-          <button
-            onClick={() => navigate("/consult-companie")}
-            type="button"
-            className="btn btn-danger"
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
-    </Card>
+    <S.Container>
+      <Card className="card">
+        <CardHeader>
+          <h1 style={{ fontSize: 20 }}>Cadastrar Empresas</h1>
+        </CardHeader>
+
+        <CardBody>
+          <Input
+            labelPlacement="inside"
+            label="Nome"
+            value={name}
+            onValueChange={setName}
+          />
+
+          <div className="buttons">
+            <Button onPress={submit} color="success" variant="flat">
+              Criar
+            </Button>
+            <Button
+              as={Link}
+              to={"/consult-companie"}
+              color="danger"
+              variant="flat"
+            >
+              Consultar
+            </Button>
+          </div>
+        </CardBody>
+      </Card>
+    </S.Container>
   );
 }

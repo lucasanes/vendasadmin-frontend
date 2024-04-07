@@ -1,87 +1,176 @@
-import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle,
+} from "@nextui-org/react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { theme } from "../../../stitches.config";
+import logo from "../../assets/img/bolsa.png";
+import { useAuth } from "../../contexts/auth";
+import * as S from "./styles";
 
-export function Navbar() {
-  const container = useRef(null);
+export function Nav() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const [open, setOpen] = useState(false);
+  const { signOut } = useAuth();
 
-  function handleButtonClick() {
-    setOpen(!open);
-  }
-
-  function handleClickOutside() {
-    setOpen(false);
-  }
-
-  document.addEventListener("mousedown", handleClickOutside);
+  const navigate = useNavigate();
 
   return (
-    <div className="bs-component" ref={container}>
-      <div className="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
-        <div className="container">
-          <Link to="/" className="navbar-brand">
-            SIGEVE WEB
-          </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarResponsive"
-            aria-controls="navbarResponsive"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+    <S.Container isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
+      <NavbarContent>
+        <NavbarMenuToggle className="toggle" />
+        <NavbarBrand>
+          <Button
+            as={Link}
+            to="/"
+            style={{
+              color: theme.colors.pallet.toString(),
+              background: "none",
+            }}
           >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarResponsive">
-            <ul className="navbar-nav me-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to="/">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/register">
-                  Usuários
-                </Link>
-              </li>
-              <li className="nav-item dropdown">
-                <button
-                  className="nav-link dropdown-toggle"
-                  onMouseEnter={handleButtonClick}
-                  onMouseLeave={handleButtonClick}
-                >
-                  Cadastros
-                </button>
-                <div
-                  onMouseLeave={handleButtonClick}
-                  className={open ? "dropdown-menu show" : "dropdown-menu"}
-                >
-                  <Link className="dropdown-item" to="/consult-companie">
-                    Empresas
-                  </Link>
-                  <Link className="dropdown-item" to="/">
-                    Fornecedores
-                  </Link>
-                  <div className="dropdown-divider" />
-                  <Link className="dropdown-item" to="/">
-                    Unidades
-                  </Link>
-                  <Link className="dropdown-item" to="/">
-                    Produtos
-                  </Link>
-                </div>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/">
-                  Login
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+            <img width={30} src={logo} />
+            <span style={{ marginTop: 2, fontSize: 18, color: "#fff" }}>
+              Sigeve Web
+            </span>
+          </Button>
+        </NavbarBrand>
+      </NavbarContent>
+
+      <NavbarContent className="buttons">
+        <NavbarItem>
+          <Button as={Link} to="/" variant="light">
+            <span style={{ color: "#fff" }}>Home</span>
+          </Button>
+        </NavbarItem>
+        <Dropdown>
+          <DropdownTrigger>
+            <Button variant="light">
+              <span style={{ color: "#fff" }}>Consultar</span>
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu onAction={(key) => navigate(`/${key}`)}>
+            <DropdownItem key="consult-companie">Empresas</DropdownItem>
+            <DropdownItem key="consult-suppliers">Fornecedores</DropdownItem>
+            <DropdownItem key="consult-units">Unidades</DropdownItem>
+            <DropdownItem key="consult-products">Produtos</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+        <Dropdown>
+          <DropdownTrigger>
+            <Button variant="light">
+              <span style={{ color: "#fff" }}>Cadastrar</span>
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu onAction={(key) => navigate(`/${key}`)}>
+            <DropdownItem key="register-companie">Empresas</DropdownItem>
+            <DropdownItem key="register-suppliers">Fornecedores</DropdownItem>
+            <DropdownItem key="register-units">Unidades</DropdownItem>
+            <DropdownItem key="register-products">Produtos</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </NavbarContent>
+      <NavbarContent justify="end">
+        <NavbarItem>
+          <Button onPress={signOut} color="danger" variant="light">
+            Desconectar
+          </Button>
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarMenu>
+        <NavbarMenuItem>
+          <Button
+            as={Link}
+            to="/"
+            variant="light"
+            onPress={() => setIsMenuOpen(false)}
+          >
+            <span style={{ color: "#fff" }}>Home</span>
+          </Button>
+        </NavbarMenuItem>
+
+        <NavbarMenuItem>
+          <Dropdown>
+            <DropdownTrigger>
+              <Button variant="light">
+                <span style={{ color: "#fff" }}>Consultar</span>
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu onAction={(key) => navigate(`/${key}`)}>
+              <DropdownItem
+                key="consult-companie"
+                onPress={() => setIsMenuOpen(false)}
+              >
+                Empresas
+              </DropdownItem>
+              <DropdownItem
+                key="consult-suppliers"
+                onPress={() => setIsMenuOpen(false)}
+              >
+                Fornecedores
+              </DropdownItem>
+              <DropdownItem
+                key="consult-units"
+                onPress={() => setIsMenuOpen(false)}
+              >
+                Produtos
+              </DropdownItem>
+              <DropdownItem
+                key="consult-products"
+                onPress={() => setIsMenuOpen(false)}
+              >
+                Unidades
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </NavbarMenuItem>
+
+        <NavbarMenuItem>
+          <Dropdown>
+            <DropdownTrigger>
+              <Button variant="light">
+                <span style={{ color: "#fff" }}>Cadastrar</span>
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu onAction={(key) => navigate(`/${key}`)}>
+              <DropdownItem
+                key="register-companie"
+                onPress={() => setIsMenuOpen(false)}
+              >
+                Empresas
+              </DropdownItem>
+              <DropdownItem
+                key="register-suppliers"
+                onPress={() => setIsMenuOpen(false)}
+              >
+                Fornecedores
+              </DropdownItem>
+              <DropdownItem
+                key="register-units"
+                onPress={() => setIsMenuOpen(false)}
+              >
+                Produtos
+              </DropdownItem>
+              <DropdownItem
+                key="register-products"
+                onPress={() => setIsMenuOpen(false)}
+              >
+                Unidades
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </NavbarMenuItem>
+      </NavbarMenu>
+    </S.Container>
   );
 }

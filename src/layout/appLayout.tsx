@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
-import { Navbar } from "../components/nav";
+import { Nav } from "../components/nav";
 import * as S from "./styles";
 
 export function AppLayout() {
   return (
     <S.Container>
-      <Navbar />
+      <Nav />
 
       <S.Content>
         <Outlet />

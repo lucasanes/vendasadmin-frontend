@@ -1,20 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
+  Card,
+  CardBody,
+  CardHeader,
+  Input,
+  useDisclosure,
 } from "@nextui-org/react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Card } from "../../../components/card";
-import { FormGroup } from "../../../components/form-group";
-import * as messages from "../../../components/toastr";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ModalDelete } from "../../../components/modalDelete";
 import { api } from "../../../services/api";
 import { TableCompanies } from "./components/tableCompanies";
+import * as S from "./styles";
 
-interface Empresa {
+interface Company {
   id: number;
   nome: string;
   cpf_cnpj: string;
@@ -34,136 +35,104 @@ interface Empresa {
 }
 
 export function ConsultCompanies() {
-  const [nome, setNome] = useState("");
-  const [empresas, setEmpresas] = useState<Empresa[]>([]);
-  const [empresaExcluir, setEmpresaExcluir] = useState<Empresa | null>(null);
+  const [name, setName] = useState("");
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [companyDeleteId, setCompanyDeleteId] = useState<number | null>(null);
 
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
   const navigate = useNavigate();
 
-  function buscar() {
+  useEffect(() => {
+    search();
+  }, []);
+
+  function search() {
     api
-      .get(`/api/empresas/?nome=${nome}`)
+      .get(`/api/empresas/?nome=${name}`)
       .then((response) => {
-        setEmpresas(response.data);
+        setCompanies(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }
 
-  function editar(id: number) {
+  function edit(id: number) {
     navigate(`/register-companie/${id}`);
   }
 
-  function abrirConfirmacao(empresa: Empresa) {
-    setEmpresaExcluir(empresa);
-    setShowConfirmDialog(true);
+  function openModalDelete(id: number) {
+    setCompanyDeleteId(id);
+    onOpen();
   }
 
-  function excluir() {
+  function remove() {
     api
-      .delete(`/api/empresas/${empresaExcluir?.id}`)
+      .delete(`/api/empresas/${companyDeleteId}`)
       .then(() => {
-        const newEmpresas = empresas.filter(
-          (empresa) => empresa.id != empresaExcluir?.id
+        const newCompanies = companies.filter(
+          (company) => company.id != companyDeleteId
         );
-        setEmpresas(newEmpresas);
-        setShowConfirmDialog(false);
-        messages.mensagemSucesso("Empresa excluída com sucesso!");
+        setCompanies(newCompanies);
+        onClose();
+        toast.success("Empresa excluída com sucesso!");
       })
       .catch(() => {
-        messages.mensagemErro("Ocorreu um erro ao tentar excluir a empresa.");
+        toast.error("Ocorreu um erro ao tentar excluir a empresa.");
       });
   }
 
-  function cancelarExcluir() {
-    setEmpresaExcluir(null);
-    setShowConfirmDialog(false);
+  function cancelDelete() {
+    setCompanyDeleteId(null);
+    onClose();
   }
-
-  function prepararFormularioCadastro() {
-    navigate("/register-companie");
-  }
-
-  const confirmDialogFooter = (
-    <div>
-      <Button onClick={excluir}>Confirmar</Button>
-      <Button onClick={cancelarExcluir}>Cancelar</Button>
-    </div>
-  );
 
   return (
-    <Card title="Consulta Empresas">
-      <div className="row">
-        <div className="col-md-12">
-          <div className="bs-component">
-            <FormGroup label="Nome: " htmlFor="inputNome">
-              <input
-                type="text"
-                id="inputNome"
-                className="form-control"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                placeholder="Digite o Nome"
-              />
-            </FormGroup>
+    <>
+      <S.Container>
+        <Card className="card">
+          <CardHeader>
+            <h1 style={{ fontSize: 20 }}>Consulta Empresas</h1>
+          </CardHeader>
 
-            <div className="row">
-              <div className="col-md-6">
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={buscar}
-                >
-                  Buscar
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={prepararFormularioCadastro}
-                >
-                  Cadastrar
-                </button>
-              </div>
+          <CardBody>
+            <Input
+              labelPlacement="inside"
+              label="Nome"
+              value={name}
+              onValueChange={setName}
+            />
+
+            <div className="buttons">
+              <Button onPress={search} color="success" variant="flat">
+                Buscar
+              </Button>
+              <Button
+                as={Link}
+                to={"/register-companie"}
+                color="danger"
+                variant="flat"
+              >
+                Cadastrar
+              </Button>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <br />
+            <TableCompanies
+              companies={companies}
+              edit={edit}
+              remove={openModalDelete}
+            />
+          </CardBody>
+        </Card>
+      </S.Container>
 
-      <div className="row">
-        <div className="col-md-12">
-          <TableCompanies
-            empresas={empresas}
-            editar={editar}
-            excluir={abrirConfirmacao}
-          />
-        </div>
-      </div>
-
-      <Modal
-        isOpen={showConfirmDialog}
-        onOpenChange={() => setShowConfirmDialog(!showConfirmDialog)}
-      >
-        <ModalHeader>
-          <ModalContent>
-            <h1>Confirmar operação</h1>
-          </ModalContent>
-        </ModalHeader>
-
-        <ModalBody>
-          <ModalContent>
-            <span>Confirma a exclusão da empresa?</span>
-          </ModalContent>
-        </ModalBody>
-
-        <ModalFooter>
-          <ModalContent>{confirmDialogFooter}</ModalContent>
-        </ModalFooter>
-      </Modal>
-    </Card>
+      <ModalDelete
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        cancel={cancelDelete}
+        confirm={remove}
+      />
+    </>
   );
 }

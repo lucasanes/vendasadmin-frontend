@@ -12,19 +12,23 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import logo from "../../assets/img/bolsa.png";
 import PasswordInput from "../../components/passwordInput";
+import { useAuth } from "../../contexts/auth";
 import { api } from "../../services/api";
 import * as S from "./styles";
 
 export function Login() {
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [pass, setPass] = useState("");
 
   const navigate = useNavigate();
 
-  async function entrar() {
+  const { signIn } = useAuth();
+
+  async function signInButton() {
     api
-      .post("/api/usuarios/autenticar", { email, senha })
-      .then(() => {
+      .post("/api/usuarios/autenticar", { email, senha: pass })
+      .then((response) => {
+        signIn(response.data.user, response.data.token);
         navigate("/");
       })
       .catch((erro) => {
@@ -46,7 +50,7 @@ export function Login() {
         <CardBody>
           <form
             style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-            onSubmit={entrar}
+            onSubmit={signInButton}
             autoComplete="off"
           >
             <Input
@@ -62,14 +66,14 @@ export function Login() {
             />
             <PasswordInput
               autoComplete="off"
-              value={senha}
-              onValueChange={setSenha}
+              value={pass}
+              onValueChange={setPass}
             />
           </form>
         </CardBody>
         <Divider />
         <CardFooter style={{ gap: "10px" }}>
-          <Button onClick={entrar}>Entrar</Button>
+          <Button onClick={signInButton}>Entrar</Button>
           <Button as={Link} to="/register">
             Cadastrar
           </Button>

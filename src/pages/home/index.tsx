@@ -1,27 +1,39 @@
+import { Button } from "@nextui-org/react";
 import { Link } from "react-router-dom";
+import * as S from "./styles";
 
 export function Home() {
   return (
-    <div className="jumbotron">
-      <h1 className="display-3">Bem vindo!</h1>
-      <p className="lead">Esse é seu Sistema de Gerenciamento de Vendas.</p>
-      <hr className="my-4" />
-      <p>
-        E essa é sua área administrativa, utilize um dos menus ou botões abaixo
-        para navegar pelo sistema.
-      </p>
-      <p className="lead">
-        <Link className="btn btn-primary btn-lg" to="/register" role="button">
-          <i className="fa fa-users"></i> Cadastrar Usuário
-        </Link>
-        <Link
-          className="btn btn-danger btn-lg"
-          to="/register-companie"
-          role="button"
-        >
-          <i className="fa fa-users"></i> Cadastrar Nota Fiscal
-        </Link>
-      </p>
-    </div>
+    <S.Container>
+      <S.Content>
+        <h1 className="display-3">Bem vindo!</h1>
+        <span>Esse é seu Sistema de Gerenciamento de Vendas.</span>
+        <div className="line"></div>
+        <p>
+          E essa é sua área administrativa, utilize um dos menus ou botões
+          abaixo para navegar pelo sistema.
+        </p>
+        <div className="buttons">
+          <Button
+            variant="flat"
+            color="danger"
+            as={Link}
+            to="/register-user"
+            role="button"
+          >
+            Cadastrar Usuário
+          </Button>
+          <Button
+            variant="flat"
+            color="success"
+            as={Link}
+            to="/register-companie"
+            role="button"
+          >
+            Cadastrar Nota Fiscal
+          </Button>
+        </div>
+      </S.Content>
+    </S.Container>
   );
 }

@@ -14,14 +14,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import logo from "../../assets/img/bolsa.png";
 import PasswordInput from "../../components/passwordInput";
+import { useAuth } from "../../contexts/auth";
 import { api } from "../../services/api";
 import * as S from "./styles";
 
 export function Register() {
-  const [nome, setNome] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [senhaRepeticao, setSenhaRepeticao] = useState("");
+  const [pass, setPass] = useState("");
+  const [repeatPass, setRepeatPass] = useState("");
 
   const [error, setError] = useState<{ msg: string; input: string } | null>(
     null
@@ -30,6 +31,8 @@ export function Register() {
   const [disabled, setDisabled] = useState(true);
 
   const navigate = useNavigate();
+
+  const { user } = useAuth();
 
   useEffect(() => {
     setTimeout(() => {
@@ -43,16 +46,16 @@ export function Register() {
       return;
     }
 
-    if (senha !== senhaRepeticao) {
+    if (pass !== repeatPass) {
       setError({ msg: "As Senhas informadas são diferentes.", input: "pass" });
       return;
     }
 
     setError(null);
-  }, [email, senha, senhaRepeticao]);
+  }, [email, pass, repeatPass]);
 
   function registerError() {
-    if (!nome) {
+    if (!name) {
       return { msg: "O campo Nome é obrigatório.", input: "name" };
     }
 
@@ -60,7 +63,7 @@ export function Register() {
       return { msg: "O campo Email é obrigatório.", input: "email" };
     }
 
-    if (!senha || !senhaRepeticao) {
+    if (!pass || !repeatPass) {
       return { msg: "Digite a Senha 2x.", input: "pass" };
     }
   }
@@ -75,9 +78,9 @@ export function Register() {
 
     api
       .post("/api/usuarios/salvar", {
-        nome,
+        name,
         email,
-        senha,
+        pass,
       })
       .then(() => {
         toast.success(
@@ -92,10 +95,12 @@ export function Register() {
 
   return (
     <S.Container>
-      <div className="header">
-        <img width={40} src={logo} />
-        <h1>Sigeve Web</h1>
-      </div>
+      {!user && (
+        <div className="header">
+          <img width={40} src={logo} />
+          <h1>Sigeve Web</h1>
+        </div>
+      )}
       <S.CardComponent>
         <CardHeader>
           <h1 style={{ fontSize: "20px" }}>Cadastro</h1>
@@ -111,10 +116,9 @@ export function Register() {
               isRequired
               labelPlacement="outside"
               autoComplete="off"
-              type="nome"
               label="Nome"
-              value={nome}
-              onValueChange={setNome}
+              value={name}
+              onValueChange={setName}
               startContent={<LuUserCircle className="pallet" size={20} />}
               placeholder="Vanessa"
               disabled={disabled}
@@ -137,8 +141,8 @@ export function Register() {
             />
             <PasswordInput
               autoComplete="off"
-              value={senha}
-              onValueChange={setSenha}
+              value={pass}
+              onValueChange={setPass}
               disabled={disabled}
               isInvalid={error?.input == "pass"}
               errorMessage={error?.input == "pass" && error.msg}
@@ -147,8 +151,8 @@ export function Register() {
               label="Repita sua senha"
               placeholder="Digite sua senha novamente"
               autoComplete="off"
-              value={senhaRepeticao}
-              onValueChange={setSenhaRepeticao}
+              value={repeatPass}
+              onValueChange={setRepeatPass}
               disabled={disabled}
               isInvalid={error?.input == "pass"}
               errorMessage={error?.input == "pass" && error.msg}

@@ -1,17 +1,17 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../../services/api.js";
-import { AuthContextProps, DataProps } from "./types.js";
+import { AuthContextProps, DataProps, User } from "./types.js";
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
-function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<DataProps>({} as DataProps);
 
-  function signIn(nome: string, email: string, token: string) {
+  function signIn(user: User, token: string) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     setData({
-      user: { nome, email },
+      user: user,
       token: token,
     });
 
@@ -31,19 +31,18 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
     async function fetchData() {
       try {
-        const response = await api.get(`/user/token/${token}`);
+        const response = await api.get(`/api/usuarios/validar/${token}`);
 
-        const dadosUser = {
-          nome: response.data.user.nome,
-          email: response.data.user.email,
-        };
-
-        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        setData({
-          user: dadosUser,
-          token: response.data.token,
-        });
-      } catch {
+        if (response.data.token) {
+          api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+          setData({
+            user: response.data.user,
+            token: response.data.token,
+          });
+        } else {
+          signOut();
+        }
+      } catch (e) {
         signOut();
       }
     }
@@ -69,10 +68,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-function useAuth() {
+export function useAuth() {
   const context = useContext(AuthContext);
 
   return context;
 }
-
-export { AuthContext, AuthProvider, useAuth };
