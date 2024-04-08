@@ -6,7 +6,7 @@ export function Home() {
   return (
     <S.Container>
       <S.Content>
-        <h1 className="display-3">Bem vindo!</h1>
+        <h1>Bem vindo!</h1>
         <span>Esse é seu Sistema de Gerenciamento de Vendas.</span>
         <div className="line"></div>
         <p>

@@ -6,13 +6,11 @@ export const Container = styled("div", {
   display: "flex",
   alignItems: "flex-start",
   justifyContent: "center",
-  paddingTop: 50,
+  padding: "50px 20px",
 
   ".card": {
     width: "100%",
     maxWidth: "800px",
-    paddingLeft: 10,
-    paddingTop: 10,
   },
 
   ".buttons": {

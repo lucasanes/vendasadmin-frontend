@@ -49,7 +49,7 @@ export function Nav() {
       <NavbarContent className="buttons">
         <NavbarItem>
           <Button as={Link} to="/" variant="light">
-            <span style={{ color: "#fff" }}>Home</span>
+            <span style={{ color: "#fff" }}>Início</span>
           </Button>
         </NavbarItem>
         <Dropdown>
@@ -79,7 +79,7 @@ export function Nav() {
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>
-      <NavbarContent justify="end">
+      <NavbarContent className="buttons" justify="end">
         <NavbarItem>
           <Button onPress={signOut} color="danger" variant="light">
             Desconectar
@@ -95,7 +95,7 @@ export function Nav() {
             variant="light"
             onPress={() => setIsMenuOpen(false)}
           >
-            <span style={{ color: "#fff" }}>Home</span>
+            <span style={{ color: "#fff" }}>Início</span>
           </Button>
         </NavbarMenuItem>
 
@@ -169,6 +169,12 @@ export function Nav() {
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
+        </NavbarMenuItem>
+
+        <NavbarMenuItem>
+          <Button onPress={signOut} color="danger" variant="light">
+            Desconectar
+          </Button>
         </NavbarMenuItem>
       </NavbarMenu>
     </S.Container>

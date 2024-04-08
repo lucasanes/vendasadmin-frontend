@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 import {
   Button,
@@ -40,39 +40,20 @@ export function Register() {
     }, 1000);
   }, []);
 
-  useEffect(() => {
+  function emailValidator() {
     if (email && !email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
       setError({ msg: "Informe um Email válido.", input: "email" });
       return;
     }
-
-    if (pass !== repeatPass) {
-      setError({ msg: "As Senhas informadas são diferentes.", input: "pass" });
-      return;
-    }
-
     setError(null);
-  }, [email, pass, repeatPass]);
-
-  function registerError() {
-    if (!name) {
-      return { msg: "O campo Nome é obrigatório.", input: "name" };
-    }
-
-    if (!email) {
-      return { msg: "O campo Email é obrigatório.", input: "email" };
-    }
-
-    if (!pass || !repeatPass) {
-      return { msg: "Digite a Senha 2x.", input: "pass" };
-    }
   }
 
-  function register() {
-    const error = registerError();
+  function register(e: FormEvent) {
 
-    if (error) {
-      setError(error);
+    e.preventDefault();
+
+    if (pass !== repeatPass) {
+      toast.error("As Senhas informadas são diferentes.");
       return;
     }
 
@@ -102,33 +83,25 @@ export function Register() {
         </div>
       )}
       <S.CardComponent>
-        <CardHeader>
-          <h1 style={{ fontSize: "20px" }}>Cadastro</h1>
-        </CardHeader>
-        <Divider />
-        <CardBody>
-          <form
-            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-            onSubmit={register}
-            autoComplete="off"
-          >
+        <form onSubmit={register}>
+          <CardHeader>
+            <h1 style={{ fontSize: "20px" }}>Cadastro</h1>
+          </CardHeader>
+          <Divider />
+          <CardBody className="form">
             <Input
               isRequired
               labelPlacement="outside"
-              autoComplete="off"
               label="Nome"
               value={name}
               onValueChange={setName}
               startContent={<LuUserCircle className="pallet" size={20} />}
               placeholder="Vanessa"
               disabled={disabled}
-              isInvalid={error?.input == "name"}
-              errorMessage={error?.input == "name" && error.msg}
             />
             <Input
               isRequired
               labelPlacement="outside"
-              autoComplete="off"
               type="email"
               label="Email"
               value={email}
@@ -136,36 +109,33 @@ export function Register() {
               startContent={<MdOutlineEmail className="pallet" size={20} />}
               placeholder="eu@exemplo.com"
               disabled={disabled}
+              onBlur={emailValidator}
               isInvalid={error?.input == "email"}
               errorMessage={error?.input == "email" && error.msg}
             />
             <PasswordInput
-              autoComplete="off"
               value={pass}
               onValueChange={setPass}
               disabled={disabled}
-              isInvalid={error?.input == "pass"}
-              errorMessage={error?.input == "pass" && error.msg}
             />
             <PasswordInput
               label="Repita sua senha"
               placeholder="Digite sua senha novamente"
-              autoComplete="off"
               value={repeatPass}
               onValueChange={setRepeatPass}
               disabled={disabled}
-              isInvalid={error?.input == "pass"}
-              errorMessage={error?.input == "pass" && error.msg}
             />
-          </form>
-        </CardBody>
-        <Divider />
-        <CardFooter style={{ gap: "10px" }}>
-          <Button onClick={register}>Cadastrar</Button>
-          <Button as={Link} to="/">
-            Entrar em conta existente
-          </Button>
-        </CardFooter>
+          </CardBody>
+          <Divider />
+          <CardFooter className="footer">
+            <Button color="success" variant="flat" type="submit">
+              Cadastrar
+            </Button>
+            <Button color="danger" variant="flat" as={Link} to="/">
+              {!user ? "Entrar em conta" : "Voltar"}
+            </Button>
+          </CardFooter>
+        </form>
       </S.CardComponent>
     </S.Container>
   );

@@ -1,12 +1,15 @@
 import {
-  Button,
-  Table,
+  Spinner,
   TableBody,
   TableCell,
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
 } from "@nextui-org/react";
+import { DeleteIcon } from "../../../../../assets/svg/DeleteIcon";
+import { EditIcon } from "../../../../../assets/svg/EditIcon";
+import * as S from "./styles";
 
 interface Empresa {
   id: number;
@@ -31,42 +34,54 @@ export function TableCompanies({
   companies,
   edit,
   remove,
+  isLoading,
 }: {
   companies: Empresa[];
   edit: (id: number) => void;
   remove: (id: number) => void;
+  isLoading: boolean;
 }) {
   return (
-    <Table>
+    <S.Container>
       <TableHeader>
-        <TableColumn width={"75%"}>Nome</TableColumn>
-        <TableColumn>Ações</TableColumn>
+        <TableColumn width={"90%"} className="nameColumn">
+          Nome
+        </TableColumn>
+        <TableColumn className="buttonsColumn">Ações</TableColumn>
       </TableHeader>
-      <TableBody>
-        {companies.map((empresa) => (
+      <TableBody
+        style={{
+          height: isLoading ? "60px" : "auto",
+        }}
+        items={companies}
+        isLoading={isLoading}
+        loadingContent={<Spinner style={{ marginTop: 50 }} />}
+      >
+        {(empresa) => (
           <TableRow key={empresa.id}>
-            <TableCell style={{ textTransform: "capitalize" }}>
-              {empresa.nome}
-            </TableCell>
-            <TableCell style={{ display: "flex", gap: 20 }}>
-              <Button
-                color="success"
-                variant="flat"
-                onPress={() => edit(empresa.id)}
-              >
-                Editar
-              </Button>
-              <Button
-                color="danger"
-                variant="flat"
-                onPress={() => remove(empresa.id)}
-              >
-                Excluir
-              </Button>
+            <TableCell className="nameCell">{empresa.nome}</TableCell>
+
+            <TableCell className="buttonsCell">
+              <Tooltip color="success" content="Editar">
+                <span
+                  onClick={() => edit(empresa.id)}
+                  className="text-success cursor-pointer active:opacity-50"
+                >
+                  <EditIcon />
+                </span>
+              </Tooltip>
+              <Tooltip color="danger" content="Deletar">
+                <span
+                  onClick={() => remove(empresa.id)}
+                  className="text-danger cursor-pointer active:opacity-50"
+                >
+                  <DeleteIcon />
+                </span>
+              </Tooltip>
             </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
-    </Table>
+    </S.Container>
   );
 }

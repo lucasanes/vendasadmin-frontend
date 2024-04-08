@@ -8,7 +8,7 @@ export const Container = styled("div", {
   flexDirection: "column",
   justifyContent: "flex-start",
   alignItems: "center",
-  paddingTop: 50,
+  padding: "50px 20px",
   gap: "30px",
 
   ".header": {
@@ -24,5 +24,17 @@ export const Container = styled("div", {
 });
 
 export const CardComponent = styled(Card, {
-  width: "500px",
+  width: "100%",
+  maxWidth: "800px",
+
+  ".form": {
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+  },
+
+  ".footer": {
+    gap: 10,
+    display: "flex",
+  },
 });

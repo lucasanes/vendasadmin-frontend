@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.10",
+    "@react-stately/data": "^3.11.2",
     "@stitches/react": "^1.2.8",
     "axios": "^1.6.8",
     "framer-motion": "^11.0.25",

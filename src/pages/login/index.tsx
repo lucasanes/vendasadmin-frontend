@@ -73,9 +73,11 @@ export function Login() {
         </CardBody>
         <Divider />
         <CardFooter style={{ gap: "10px" }}>
-          <Button onClick={signInButton}>Entrar</Button>
-          <Button as={Link} to="/register">
-            Cadastrar
+          <Button color="success" variant="flat" onClick={signInButton}>
+            Entrar
+          </Button>
+          <Button color="danger" variant="flat" as={Link} to="/register">
+            Cadastrar Conta
           </Button>
         </CardFooter>
       </S.CardComponent>

@@ -4,7 +4,7 @@ export const Container = styled("div", {
   width: "100%",
   height: "100%",
   overflowY: "auto",
-  padding: 50,
+  padding: "50px 20px",
 });
 
 export const Content = styled("div", {
@@ -19,6 +19,10 @@ export const Content = styled("div", {
     gap: 20,
   },
 
+  a: {
+    width: "185px",
+  },
+
   h1: {
     fontSize: 24,
     fontWeight: 600,
@@ -26,5 +30,11 @@ export const Content = styled("div", {
 
   span: {
     fontSize: 18,
+  },
+
+  "@sm": {
+    ".buttons": {
+      flexDirection: "column",
+    },
   },
 });

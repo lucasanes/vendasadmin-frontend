@@ -4,10 +4,12 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Divider,
   Input,
   useDisclosure,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useAsyncList } from "@react-stately/data";
+import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ModalDelete } from "../../../components/modalDelete";
@@ -35,19 +37,33 @@ interface Company {
 }
 
 export function ConsultCompanies() {
+  useAsyncList({
+    async load({ signal }) {
+      const res = await api.get(`/api/empresas/?nome`, {
+        signal,
+      });
+      setTimeout(() => {
+        setIsLoading(false);
+        setCompanies(res.data);
+      }, 1000);
+
+      return { items: res.data };
+    },
+  });
+
   const [name, setName] = useState("");
   const [companies, setCompanies] = useState<Company[]>([]);
   const [companyDeleteId, setCompanyDeleteId] = useState<number | null>(null);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    search();
-  }, []);
+  function search(e: FormEvent) {
+    e.preventDefault();
 
-  function search() {
     api
       .get(`/api/empresas/?nome=${name}`)
       .then((response) => {
@@ -96,32 +112,37 @@ export function ConsultCompanies() {
             <h1 style={{ fontSize: 20 }}>Consulta Empresas</h1>
           </CardHeader>
 
-          <CardBody>
-            <Input
-              labelPlacement="inside"
-              label="Nome"
-              value={name}
-              onValueChange={setName}
-            />
+          <Divider />
 
-            <div className="buttons">
-              <Button onPress={search} color="success" variant="flat">
-                Buscar
-              </Button>
-              <Button
-                as={Link}
-                to={"/register-companie"}
-                color="danger"
-                variant="flat"
-              >
-                Cadastrar
-              </Button>
-            </div>
+          <CardBody>
+            <form onSubmit={search}>
+              <Input
+                labelPlacement="inside"
+                label="Nome"
+                value={name}
+                onValueChange={setName}
+              />
+
+              <div className="buttons">
+                <Button type="submit" color="success" variant="flat">
+                  Buscar
+                </Button>
+                <Button
+                  as={Link}
+                  to={"/register-companie"}
+                  color="danger"
+                  variant="flat"
+                >
+                  Cadastrar
+                </Button>
+              </div>
+            </form>
 
             <TableCompanies
               companies={companies}
               edit={edit}
               remove={openModalDelete}
+              isLoading={isLoading}
             />
           </CardBody>
         </Card>

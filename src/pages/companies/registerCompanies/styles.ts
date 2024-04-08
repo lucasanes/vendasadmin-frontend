@@ -6,18 +6,22 @@ export const Container = styled("div", {
   display: "flex",
   alignItems: "flex-start",
   justifyContent: "center",
-  paddingTop: 50,
+  padding: "50px 20px",
+  overflowY: "auto",
+
+  ".form": {
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+  },
 
   ".card": {
     width: "100%",
     maxWidth: "800px",
-    paddingLeft: 10,
-    paddingTop: 10,
   },
 
   ".buttons": {
     display: "flex",
     gap: 20,
-    margin: "20px 0",
   },
 });

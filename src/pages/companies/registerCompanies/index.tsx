@@ -1,19 +1,87 @@
-import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
-import { useState } from "react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
+  Input,
+  Switch,
+} from "@nextui-org/react";
+import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../contexts/auth";
 import { api } from "../../../services/api";
+import { cnpjMask, cpfMask, phoneMask } from "../../../utils/masks";
+import {
+  validatorCNPJ,
+  validatorCPF,
+  validatorCel,
+} from "../../../utils/validators";
 import * as S from "./styles";
 
 export function RegisterCompanies() {
   const [name, setName] = useState("");
+  const [isCnpj, setIsCnpj] = useState(false);
+  const [cpf, setCpf] = useState("");
+  const [cnpj, setCnpj] = useState("");
+  const [email, setEmail] = useState("");
+  const [cel, setCel] = useState("");
+  const [subscribe, setSubscribe] = useState("");
+  const [cep, setCep] = useState("");
+  const [adress, setAdress] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [noteNumber, setNoteNumber] = useState<number | null>(null);
+  const [obs, setObs] = useState("");
+
+  const [error, setError] = useState<{ msg: string; input: string } | null>(
+    null
+  );
 
   const navigate = useNavigate();
 
   const { user } = useAuth();
 
-  function submit() {
+  function validateEmail() {
+    if (email && !email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
+      setError({ msg: "Informe um Email válido.", input: "email" });
+      return;
+    }
+    setError(null);
+  }
+
+  function validateCpf() {
+    if (cpf && !validatorCPF(cpf)) {
+      setError({ msg: "CPF inválido", input: "cpf" });
+      return;
+    }
+
+    setError(null);
+  }
+
+  function validateCnpj() {
+    if (cnpj && !validatorCNPJ(cnpj)) {
+      setError({ msg: "CNPJ inválido", input: "cnpj" });
+      return;
+    }
+
+    setError(null);
+  }
+
+  function validateCel() {
+    if (cel && !validatorCel(cel)) {
+      setError({ msg: "Informe um número de celular válido.", input: "cel" });
+      return;
+    }
+    setError(null);
+  }
+
+  function submit(e: FormEvent) {
+    e.preventDefault();
+
     api
       .post("/api/empresas/salvar", { nome: name, usuario: user?.id })
       .then(() => {
@@ -28,20 +96,143 @@ export function RegisterCompanies() {
   return (
     <S.Container>
       <Card className="card">
-        <CardHeader>
-          <h1 style={{ fontSize: 20 }}>Cadastrar Empresas</h1>
-        </CardHeader>
+        <form onSubmit={submit}>
+          <CardHeader>
+            <h1 style={{ fontSize: 20 }}>Cadastrar Empresas</h1>
+          </CardHeader>
 
-        <CardBody>
-          <Input
-            labelPlacement="inside"
-            label="Nome"
-            value={name}
-            onValueChange={setName}
-          />
+          <Divider />
 
-          <div className="buttons">
-            <Button onPress={submit} color="success" variant="flat">
+          <CardBody className="form">
+            <Input
+              isRequired
+              labelPlacement="inside"
+              label="Nome"
+              value={name}
+              onValueChange={setName}
+            />
+
+            {!isCnpj ? (
+              <Input
+                isRequired
+                maxLength={14}
+                labelPlacement="inside"
+                label="CPF"
+                value={cpfMask(cpf)}
+                onValueChange={(e) => setCpf(e.replace(/\D/g, ""))}
+                onBlur={validateCpf}
+                isInvalid={error?.input === "cpf"}
+                errorMessage={error?.input === "cpf" && error?.msg}
+              />
+            ) : (
+              <Input
+                isRequired
+                maxLength={18}
+                labelPlacement="inside"
+                label="CNPJ"
+                value={cnpjMask(cnpj)}
+                onValueChange={(e) => setCnpj(e.replace(/\D/g, ""))}
+                onBlur={validateCnpj}
+                isInvalid={error?.input === "cnpj"}
+                errorMessage={error?.input === "cnpj" && error?.msg}
+              />
+            )}
+            <Switch size="sm" isSelected={isCnpj} onValueChange={setIsCnpj}>
+              Pessoa jurídica?
+            </Switch>
+
+            <Input
+              isRequired
+              labelPlacement="inside"
+              type="email"
+              label="Email"
+              value={email}
+              onValueChange={setEmail}
+              onBlur={validateEmail}
+              isInvalid={error?.input === "email"}
+              errorMessage={error?.input === "email" && error?.msg}
+            />
+
+            <Input
+              isRequired
+              maxLength={15}
+              labelPlacement="inside"
+              label="Celular"
+              value={phoneMask(cel)}
+              onValueChange={(e) => setCel(e.replace(/\D/g, ""))}
+              onBlur={validateCel}
+              isInvalid={error?.input === "cel"}
+              errorMessage={error?.input === "cel" && error?.msg}
+            />
+
+            <Input
+              isRequired
+              labelPlacement="inside"
+              label="Inscrição"
+              value={subscribe}
+              onValueChange={setSubscribe}
+            />
+
+            <Input
+              isRequired
+              labelPlacement="inside"
+              label="CEP"
+              value={cep}
+              onValueChange={setCep}
+            />
+
+            <Input
+              isRequired
+              labelPlacement="inside"
+              label="Endereço"
+              value={adress}
+              onValueChange={setAdress}
+            />
+
+            <Input
+              isRequired
+              labelPlacement="inside"
+              label="Estado"
+              value={state}
+              onValueChange={setState}
+            />
+
+            <Input
+              isRequired
+              labelPlacement="inside"
+              label="Cidade"
+              value={city}
+              onValueChange={setCity}
+            />
+
+            <Input
+              isRequired
+              labelPlacement="inside"
+              label="Bairro"
+              value={neighborhood}
+              onValueChange={setNeighborhood}
+            />
+
+            <Input
+              isRequired
+              labelPlacement="inside"
+              label="Próximo Número Nota"
+              value={noteNumber?.toString()}
+              onChange={(e) => setNoteNumber(Number(e.target.value))}
+            />
+
+            <Input
+              labelPlacement="inside"
+              label="Observação"
+              value={obs}
+              onValueChange={setObs}
+            />
+          </CardBody>
+
+          <Divider />
+
+          <CardFooter className="buttons">
+            <Button type="submit" color="success" variant="flat">
               Criar
             </Button>
             <Button
@@ -52,8 +243,8 @@ export function RegisterCompanies() {
             >
               Consultar
             </Button>
-          </div>
-        </CardBody>
+          </CardFooter>
+        </form>
       </Card>
     </S.Container>
   );
