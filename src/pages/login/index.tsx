@@ -43,15 +43,13 @@ export function Login() {
         <h1>Sigeve Web</h1>
       </div>
       <S.CardComponent>
-        <CardHeader>
-          <h1 style={{ fontSize: "20px" }}>Login</h1>
-        </CardHeader>
-        <Divider />
-        <CardBody>
-          <form
+        <form onSubmit={signInButton}>
+          <CardHeader>
+            <h1 style={{ fontSize: "20px" }}>Login</h1>
+          </CardHeader>
+          <Divider />
+          <CardBody
             style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-            onSubmit={signInButton}
-            autoComplete="off"
           >
             <Input
               isRequired
@@ -69,17 +67,17 @@ export function Login() {
               value={pass}
               onValueChange={setPass}
             />
-          </form>
-        </CardBody>
-        <Divider />
-        <CardFooter style={{ gap: "10px" }}>
-          <Button color="success" variant="flat" onClick={signInButton}>
-            Entrar
-          </Button>
-          <Button color="danger" variant="flat" as={Link} to="/register">
-            Cadastrar Conta
-          </Button>
-        </CardFooter>
+          </CardBody>
+          <Divider />
+          <CardFooter style={{ gap: "10px" }}>
+            <Button color="success" variant="flat" onClick={signInButton}>
+              Entrar
+            </Button>
+            <Button color="danger" variant="flat" as={Link} to="/register">
+              Cadastrar Conta
+            </Button>
+          </CardFooter>
+        </form>
       </S.CardComponent>
     </S.Container>
   );

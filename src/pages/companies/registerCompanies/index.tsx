@@ -8,12 +8,13 @@ import {
   Input,
   Switch,
 } from "@nextui-org/react";
-import { FormEvent, useState } from "react";
+import axios from "axios";
+import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../contexts/auth";
 import { api } from "../../../services/api";
-import { cnpjMask, cpfMask, phoneMask } from "../../../utils/masks";
+import { cepMask, cnpjMask, cpfMask, phoneMask } from "../../../utils/masks";
 import {
   validatorCNPJ,
   validatorCPF,
@@ -79,16 +80,52 @@ export function RegisterCompanies() {
     setError(null);
   }
 
+  useEffect(() => {
+    if (cep.length !== 8) return;
+
+    axios.get(`https://viacep.com.br/ws/${cep}/json/`).then((response) => {
+      setState(response.data.uf);
+      setCity(response.data.localidade);
+      setAdress(response.data.logradouro);
+      setNeighborhood(response.data.bairro);
+    });
+  }, [cep]);
+
+  useEffect(() => {
+    if (cnpj.length !== 14) return;
+
+    axios
+      .get(`https://api-publica.speedio.com.br/busca?cnpj=${cnpj}`)
+      .then((response) => {
+        console.log(response.data);
+      });
+  }, [cnpj]);
+
   function submit(e: FormEvent) {
     e.preventDefault();
 
     api
-      .post("/api/empresas/salvar", { nome: name, usuario: user?.id })
+      .post("/api/empresas/salvar", {
+        nome: name,
+        cpfCnpj: isCnpj ? cnpj : cpf,
+        email,
+        telefone: cel,
+        inscricao: subscribe,
+        cep,
+        endereco: adress,
+        uf: state,
+        cidade: city,
+        bairro: neighborhood,
+        proximoNumeroNota: noteNumber,
+        observacao: obs,
+        usuario: user?.id,
+      })
       .then(() => {
         navigate("/consult-companie");
         toast.success("Empresa cadastrada com sucesso!");
       })
       .catch((error) => {
+        console.log(error);
         toast.error(error.response.data);
       });
   }
@@ -119,7 +156,7 @@ export function RegisterCompanies() {
                 labelPlacement="inside"
                 label="CPF"
                 value={cpfMask(cpf)}
-                onValueChange={(e) => setCpf(e.replace(/\D/g, ""))}
+                onValueChange={(e: string) => setCpf(e.replace(/\D/g, ""))}
                 onBlur={validateCpf}
                 isInvalid={error?.input === "cpf"}
                 errorMessage={error?.input === "cpf" && error?.msg}
@@ -131,7 +168,7 @@ export function RegisterCompanies() {
                 labelPlacement="inside"
                 label="CNPJ"
                 value={cnpjMask(cnpj)}
-                onValueChange={(e) => setCnpj(e.replace(/\D/g, ""))}
+                onValueChange={(e: string) => setCnpj(e.replace(/\D/g, ""))}
                 onBlur={validateCnpj}
                 isInvalid={error?.input === "cnpj"}
                 errorMessage={error?.input === "cnpj" && error?.msg}
@@ -159,7 +196,7 @@ export function RegisterCompanies() {
               labelPlacement="inside"
               label="Celular"
               value={phoneMask(cel)}
-              onValueChange={(e) => setCel(e.replace(/\D/g, ""))}
+              onValueChange={(e: string) => setCel(e.replace(/\D/g, ""))}
               onBlur={validateCel}
               isInvalid={error?.input === "cel"}
               errorMessage={error?.input === "cel" && error?.msg}
@@ -175,10 +212,11 @@ export function RegisterCompanies() {
 
             <Input
               isRequired
+              maxlength={10}
               labelPlacement="inside"
               label="CEP"
-              value={cep}
-              onValueChange={setCep}
+              value={cepMask(cep)}
+              onValueChange={(e: string) => setCep(e.replace(/\D/g, ""))}
             />
 
             <Input
@@ -218,7 +256,7 @@ export function RegisterCompanies() {
               labelPlacement="inside"
               label="Próximo Número Nota"
               value={noteNumber?.toString()}
-              onChange={(e) => setNoteNumber(Number(e.target.value))}
+              onChange={(e: string) => setNoteNumber(Number(e))}
             />
 
             <Input

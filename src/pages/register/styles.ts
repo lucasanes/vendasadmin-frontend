@@ -30,7 +30,7 @@ export const CardComponent = styled(Card, {
   ".form": {
     display: "flex",
     flexDirection: "column",
-    gap: 10,
+    gap: 20,
   },
 
   ".footer": {
