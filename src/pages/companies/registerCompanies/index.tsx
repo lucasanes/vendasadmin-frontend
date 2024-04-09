@@ -118,7 +118,7 @@ export function RegisterCompanies() {
         bairro: neighborhood,
         proximoNumeroNota: noteNumber,
         observacao: obs,
-        usuario: user?.id,
+        usuarioId: 1,
       })
       .then(() => {
         navigate("/consult-companie");
@@ -212,7 +212,7 @@ export function RegisterCompanies() {
 
             <Input
               isRequired
-              maxlength={10}
+              maxLength={10}
               labelPlacement="inside"
               label="CEP"
               value={cepMask(cep)}
@@ -256,7 +256,9 @@ export function RegisterCompanies() {
               labelPlacement="inside"
               label="Próximo Número Nota"
               value={noteNumber?.toString()}
-              onChange={(e: string) => setNoteNumber(Number(e))}
+              onValueChange={(e: string) =>
+                setNoteNumber(Number(e.replace(/\D/g, "")))
+              }
             />
 
             <Input
