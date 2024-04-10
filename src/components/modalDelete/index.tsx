@@ -6,7 +6,6 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@nextui-org/react";
-import { useEffect } from "react";
 
 export function ModalDelete({
   isOpen,
@@ -19,23 +18,15 @@ export function ModalDelete({
   cancel: () => void;
   confirm: () => void;
 }) {
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
-        confirm();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [confirm]);
+  function handleKeyPress(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.key === "Enter") {
+      confirm();
+    }
+  }
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <ModalContent>
+      <ModalContent onKeyDown={(e) => handleKeyPress(e)}>
         <ModalHeader>Confirmar Operação</ModalHeader>
         <ModalBody>
           <span>Confirma a exclusão da empresa?</span>

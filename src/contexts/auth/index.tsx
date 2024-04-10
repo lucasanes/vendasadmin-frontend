@@ -8,6 +8,8 @@ const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<DataProps>({} as DataProps);
 
+  //TODO: Salvar token nos cookies ao invés do localStorage
+
   function signIn(user: User, token: string) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     setData({

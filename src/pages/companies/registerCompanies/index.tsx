@@ -9,7 +9,7 @@ import {
   Switch,
 } from "@nextui-org/react";
 import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../contexts/auth";
@@ -24,7 +24,7 @@ import * as S from "./styles";
 
 export function RegisterCompanies() {
   const [name, setName] = useState("");
-  const [isCnpj, setIsCnpj] = useState(false);
+  const [isCpf, setIsCpf] = useState(false);
   const [cpf, setCpf] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [email, setEmail] = useState("");
@@ -80,7 +80,7 @@ export function RegisterCompanies() {
     setError(null);
   }
 
-  useEffect(() => {
+  function searchCep() {
     if (cep.length !== 8) return;
 
     axios.get(`https://viacep.com.br/ws/${cep}/json/`).then((response) => {
@@ -89,25 +89,15 @@ export function RegisterCompanies() {
       setAdress(response.data.logradouro);
       setNeighborhood(response.data.bairro);
     });
-  }, [cep]);
+  }
 
-  useEffect(() => {
-    if (cnpj.length !== 14) return;
-
-    axios
-      .get(`https://api-publica.speedio.com.br/busca?cnpj=${cnpj}`)
-      .then((response) => {
-        console.log(response.data);
-      });
-  }, [cnpj]);
-
-  function submit(e: FormEvent) {
+  function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     api
       .post("/api/empresas/salvar", {
         nome: name,
-        cpfCnpj: isCnpj ? cnpj : cpf,
+        cpfCnpj: isCpf ? cpf : cnpj,
         email,
         telefone: cel,
         inscricao: subscribe,
@@ -118,7 +108,7 @@ export function RegisterCompanies() {
         bairro: neighborhood,
         proximoNumeroNota: noteNumber,
         observacao: obs,
-        usuarioId: 1,
+        usuarioId: user?.id,
       })
       .then(() => {
         navigate("/consult-companie");
@@ -149,7 +139,7 @@ export function RegisterCompanies() {
               onValueChange={setName}
             />
 
-            {!isCnpj ? (
+            {isCpf ? (
               <Input
                 isRequired
                 maxLength={14}
@@ -174,8 +164,8 @@ export function RegisterCompanies() {
                 errorMessage={error?.input === "cnpj" && error?.msg}
               />
             )}
-            <Switch size="sm" isSelected={isCnpj} onValueChange={setIsCnpj}>
-              Pessoa jurídica?
+            <Switch size="sm" isSelected={isCpf} onValueChange={setIsCpf}>
+              Pessoa física?
             </Switch>
 
             <Input
@@ -215,6 +205,7 @@ export function RegisterCompanies() {
               maxLength={10}
               labelPlacement="inside"
               label="CEP"
+              onBlur={searchCep}
               value={cepMask(cep)}
               onValueChange={(e: string) => setCep(e.replace(/\D/g, ""))}
             />
