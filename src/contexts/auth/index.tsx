@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import Cookies from "js-cookies";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import { api } from "../../services/api.js";
 import { AuthContextProps, DataProps, User } from "./types.js";
 
@@ -8,6 +8,8 @@ const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<DataProps>({} as DataProps);
+
+  const [cookies, setCookie, removeCookie] = useCookies(["@sigeve:token"]);
 
   function signIn(user: User, token: string, rememberMe: boolean) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -17,14 +19,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (rememberMe) {
-      Cookies.setItem("@sigeve:token", token);
+      setCookie("@sigeve:token", token, { path: "/" });
     } else {
       sessionStorage.setItem("@sigeve:token", token);
     }
   }
 
   function signOut() {
-    Cookies.removeItem("@sigeve:token");
+    removeCookie("@sigeve:token");
     sessionStorage.removeItem("@sigeve:token");
 
     window.location.replace("/");
@@ -35,8 +37,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let token: string | null = null;
 
-    if (Cookies.getItem("@sigeve:token")) {
-      token = Cookies.getItem("@sigeve:token");
+    if (cookies["@sigeve:token"]) {
+      token = cookies["@sigeve:token"];
     } else {
       token = sessionStorage.getItem("@sigeve:token");
     }
