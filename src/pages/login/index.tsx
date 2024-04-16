@@ -3,6 +3,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Checkbox,
   Divider,
   Input,
 } from "@nextui-org/react";
@@ -20,6 +21,8 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
+  const [rememberMe, setRememberMe] = useState(false);
+
   const navigate = useNavigate();
 
   const { signIn } = useAuth();
@@ -28,7 +31,7 @@ export function Login() {
     api
       .post("/api/usuarios/autenticar", { email, senha: pass })
       .then((response) => {
-        signIn(response.data.user, response.data.token);
+        signIn(response.data.user, response.data.token, rememberMe);
         navigate("/");
       })
       .catch((erro) => {
@@ -67,6 +70,13 @@ export function Login() {
               value={pass}
               onValueChange={setPass}
             />
+            <Checkbox
+              size="sm"
+              isSelected={rememberMe}
+              onValueChange={setRememberMe}
+            >
+              Lembrar-me
+            </Checkbox>
           </CardBody>
           <Divider />
           <CardFooter style={{ gap: "10px" }}>

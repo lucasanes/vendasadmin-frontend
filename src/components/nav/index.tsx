@@ -55,7 +55,7 @@ export function Nav() {
         <Dropdown>
           <DropdownTrigger>
             <Button variant="light">
-              <span style={{ color: "#fff" }}>Consultar</span>
+              <span style={{ color: "#fff" }}>Cadastros</span>
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={(key) => navigate(`/${key}`)}>
@@ -63,19 +63,6 @@ export function Nav() {
             <DropdownItem key="consult-suppliers">Fornecedores</DropdownItem>
             <DropdownItem key="consult-units">Unidades</DropdownItem>
             <DropdownItem key="consult-products">Produtos</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-        <Dropdown>
-          <DropdownTrigger>
-            <Button variant="light">
-              <span style={{ color: "#fff" }}>Cadastrar</span>
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu onAction={(key) => navigate(`/${key}`)}>
-            <DropdownItem key="register-companie">Empresas</DropdownItem>
-            <DropdownItem key="register-suppliers">Fornecedores</DropdownItem>
-            <DropdownItem key="register-units">Unidades</DropdownItem>
-            <DropdownItem key="register-products">Produtos</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>
@@ -103,7 +90,7 @@ export function Nav() {
           <Dropdown>
             <DropdownTrigger>
               <Button variant="light">
-                <span style={{ color: "#fff" }}>Consultar</span>
+                <span style={{ color: "#fff" }}>Cadastros</span>
               </Button>
             </DropdownTrigger>
             <DropdownMenu onAction={(key) => navigate(`/${key}`)}>
@@ -127,42 +114,6 @@ export function Nav() {
               </DropdownItem>
               <DropdownItem
                 key="consult-products"
-                onPress={() => setIsMenuOpen(false)}
-              >
-                Unidades
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </NavbarMenuItem>
-
-        <NavbarMenuItem>
-          <Dropdown>
-            <DropdownTrigger>
-              <Button variant="light">
-                <span style={{ color: "#fff" }}>Cadastrar</span>
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu onAction={(key) => navigate(`/${key}`)}>
-              <DropdownItem
-                key="register-companie"
-                onPress={() => setIsMenuOpen(false)}
-              >
-                Empresas
-              </DropdownItem>
-              <DropdownItem
-                key="register-suppliers"
-                onPress={() => setIsMenuOpen(false)}
-              >
-                Fornecedores
-              </DropdownItem>
-              <DropdownItem
-                key="register-units"
-                onPress={() => setIsMenuOpen(false)}
-              >
-                Produtos
-              </DropdownItem>
-              <DropdownItem
-                key="register-products"
                 onPress={() => setIsMenuOpen(false)}
               >
                 Unidades

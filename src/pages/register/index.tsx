@@ -59,9 +59,9 @@ export function Register() {
 
     api
       .post("/api/usuarios/salvar", {
-        name,
+        nome: name,
         email,
-        pass,
+        senha: pass,
       })
       .then(() => {
         toast.success(

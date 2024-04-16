@@ -7,6 +7,10 @@ export const Container = styled(Navbar, {
     display: "none",
   },
 
+  ".buttons": {
+    justifyContent: "center",
+  },
+
   "@md": {
     ".toggle": {
       display: "flex",

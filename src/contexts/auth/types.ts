@@ -8,7 +8,7 @@ export type User = {
 };
 
 export type AuthContextProps = {
-  signIn: (user: User, token: string) => void;
+  signIn: (user: User, token: string, rememberMe: boolean) => void;
 
   signOut: () => void;
 
