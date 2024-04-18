@@ -22,7 +22,7 @@ import {
 } from "../../../utils/validators";
 import * as S from "./styles";
 
-export function RegisterCompanies() {
+export default function RegisterCompany() {
   const [name, setName] = useState("");
   const [isCpf, setIsCpf] = useState(false);
   const [cpf, setCpf] = useState("");
@@ -38,46 +38,55 @@ export function RegisterCompanies() {
   const [noteNumber, setNoteNumber] = useState<number | null>(null);
   const [obs, setObs] = useState("");
 
-  const [error, setError] = useState<{ msg: string; input: string } | null>(
-    null
-  );
-
   const navigate = useNavigate();
 
   const { user } = useAuth();
 
+  const [error, setError] = useState<
+    Array<{
+      msg: string;
+      input: string;
+    }>
+  >([]);
+
   function validateEmail() {
     if (email && !email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
-      setError({ msg: "Informe um Email válido.", input: "email" });
+      setError((rest) => [
+        ...rest,
+        { msg: "Informe um Email válido.", input: "email" },
+      ]);
       return;
     }
-    setError(null);
+    setError(error.filter((e) => e.input !== "email"));
   }
 
   function validateCpf() {
     if (cpf && !validatorCPF(cpf)) {
-      setError({ msg: "CPF inválido", input: "cpf" });
+      setError((rest) => [...rest, { msg: "CPF inválido", input: "cpf" }]);
       return;
     }
 
-    setError(null);
+    setError(error.filter((e) => e.input !== "cpf"));
   }
 
   function validateCnpj() {
     if (cnpj && !validatorCNPJ(cnpj)) {
-      setError({ msg: "CNPJ inválido", input: "cnpj" });
+      setError((rest) => [...rest, { msg: "CNPJ inválido", input: "cnpj" }]);
       return;
     }
 
-    setError(null);
+    setError(error.filter((e) => e.input !== "cnpj"));
   }
 
   function validateCel() {
     if (cel && !validatorCel(cel)) {
-      setError({ msg: "Informe um número de celular válido.", input: "cel" });
+      setError((rest) => [
+        ...rest,
+        { msg: "Informe um número de celular válido.", input: "cel" },
+      ]);
       return;
     }
-    setError(null);
+    setError(error.filter((e) => e.input !== "cel"));
   }
 
   function searchCep() {
@@ -111,7 +120,7 @@ export function RegisterCompanies() {
         usuarioId: user?.id,
       })
       .then(() => {
-        navigate("/consult-companie");
+        navigate("/consult-companies");
         toast.success("Empresa cadastrada com sucesso!");
       })
       .catch((error) => {
@@ -148,8 +157,8 @@ export function RegisterCompanies() {
                 value={cpfMask(cpf)}
                 onValueChange={(e: string) => setCpf(e.replace(/\D/g, ""))}
                 onBlur={validateCpf}
-                isInvalid={error?.input === "cpf"}
-                errorMessage={error?.input === "cpf" && error?.msg}
+                isInvalid={error.some((e) => e.input === "cpf")}
+                errorMessage={error.filter((e) => e.input === "cpf")[0]?.msg}
               />
             ) : (
               <Input
@@ -160,8 +169,8 @@ export function RegisterCompanies() {
                 value={cnpjMask(cnpj)}
                 onValueChange={(e: string) => setCnpj(e.replace(/\D/g, ""))}
                 onBlur={validateCnpj}
-                isInvalid={error?.input === "cnpj"}
-                errorMessage={error?.input === "cnpj" && error?.msg}
+                isInvalid={error.some((e) => e.input === "cnpj")}
+                errorMessage={error.filter((e) => e.input === "cnpj")[0]?.msg}
               />
             )}
             <Switch size="sm" isSelected={isCpf} onValueChange={setIsCpf}>
@@ -176,8 +185,8 @@ export function RegisterCompanies() {
               value={email}
               onValueChange={setEmail}
               onBlur={validateEmail}
-              isInvalid={error?.input === "email"}
-              errorMessage={error?.input === "email" && error?.msg}
+              isInvalid={error.some((e) => e.input === "email")}
+              errorMessage={error.filter((e) => e.input === "email")[0]?.msg}
             />
 
             <Input
@@ -188,8 +197,8 @@ export function RegisterCompanies() {
               value={phoneMask(cel)}
               onValueChange={(e: string) => setCel(e.replace(/\D/g, ""))}
               onBlur={validateCel}
-              isInvalid={error?.input === "cel"}
-              errorMessage={error?.input === "cel" && error?.msg}
+              isInvalid={error.some((e) => e.input === "cel")}
+              errorMessage={error.filter((e) => e.input === "cel")[0]?.msg}
             />
 
             <Input
@@ -268,11 +277,11 @@ export function RegisterCompanies() {
             </Button>
             <Button
               as={Link}
-              to={"/consult-companie"}
+              to={"/consult-companies"}
               color="danger"
               variant="flat"
             >
-              Consultar
+              Voltar
             </Button>
           </CardFooter>
         </form>

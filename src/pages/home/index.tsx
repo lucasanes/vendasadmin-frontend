@@ -27,7 +27,7 @@ export function Home() {
             variant="flat"
             color="success"
             as={Link}
-            to="/register-companie"
+            to="/register-company"
             role="button"
           >
             Cadastrar Nota Fiscal

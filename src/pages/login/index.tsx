@@ -7,7 +7,7 @@ import {
   Divider,
   Input,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { MdOutlineEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -27,7 +27,21 @@ export function Login() {
 
   const { signIn } = useAuth();
 
-  async function signInButton() {
+  const [error, setError] = useState<{ msg: string; input: string } | null>(
+    null
+  );
+
+  function emailValidator() {
+    if (email && !email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
+      setError({ msg: "Informe um Email válido.", input: "email" });
+      return;
+    }
+    setError(null);
+  }
+
+  async function signInButton(e: FormEvent) {
+    e.preventDefault();
+
     api
       .post("/api/usuarios/autenticar", { email, senha: pass })
       .then((response) => {
@@ -63,6 +77,9 @@ export function Login() {
               value={email}
               onValueChange={setEmail}
               startContent={<MdOutlineEmail className="pallet" size={20} />}
+              isInvalid={error?.input == "email"}
+              onBlur={emailValidator}
+              errorMessage={error?.input == "email" && error.msg}
               placeholder="eu@exemplo.com"
             />
             <PasswordInput
@@ -70,17 +87,36 @@ export function Login() {
               value={pass}
               onValueChange={setPass}
             />
-            <Checkbox
-              size="sm"
-              isSelected={rememberMe}
-              onValueChange={setRememberMe}
+            <div
+              style={{
+                margin: "-1rem 0 -.5rem 0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
-              Lembrar-me
-            </Checkbox>
+              <Checkbox
+                size="sm"
+                isSelected={rememberMe}
+                onValueChange={setRememberMe}
+              >
+                Lembrar-me
+              </Checkbox>
+
+              <Button
+                style={{ background: "none", padding: "0" }}
+                color="primary"
+                variant="light"
+                as={Link}
+                to="/forgot"
+              >
+                Esqueceu sua senha?
+              </Button>
+            </div>
           </CardBody>
           <Divider />
           <CardFooter style={{ gap: "10px" }}>
-            <Button color="success" variant="flat" onClick={signInButton}>
+            <Button color="success" variant="flat" type="submit">
               Entrar
             </Button>
             <Button color="danger" variant="flat" as={Link} to="/register">

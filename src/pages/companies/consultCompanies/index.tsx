@@ -36,16 +36,14 @@ interface Company {
   proximo_numero_nota: number;
 }
 
-export function ConsultCompanies() {
+export default function ConsultCompanies() {
   useAsyncList({
     async load({ signal }) {
       const res = await api.get(`/api/empresas/?nome`, {
         signal,
       });
-      setTimeout(() => {
-        setIsLoading(false);
-        setCompanies(res.data);
-      }, 1000);
+      setIsLoading(false);
+      setCompanies(res.data);
 
       return { items: res.data };
     },
@@ -75,7 +73,7 @@ export function ConsultCompanies() {
   }
 
   function edit(id: number) {
-    navigate(`/register-companie/${id}`);
+    navigate(`/edit-company/${id}`);
   }
 
   function openModalDelete(id: number) {
@@ -129,7 +127,7 @@ export function ConsultCompanies() {
                 </Button>
                 <Button
                   as={Link}
-                  to={"/register-companie"}
+                  to={"/register-company"}
                   color="danger"
                   variant="flat"
                 >

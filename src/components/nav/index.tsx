@@ -59,7 +59,7 @@ export function Nav() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu onAction={(key) => navigate(`/${key}`)}>
-            <DropdownItem key="consult-companie">Empresas</DropdownItem>
+            <DropdownItem key="consult-companies">Empresas</DropdownItem>
             <DropdownItem key="consult-suppliers">Fornecedores</DropdownItem>
             <DropdownItem key="consult-units">Unidades</DropdownItem>
             <DropdownItem key="consult-products">Produtos</DropdownItem>
@@ -95,7 +95,7 @@ export function Nav() {
             </DropdownTrigger>
             <DropdownMenu onAction={(key) => navigate(`/${key}`)}>
               <DropdownItem
-                key="consult-companie"
+                key="consult-companies"
                 onPress={() => setIsMenuOpen(false)}
               >
                 Empresas
